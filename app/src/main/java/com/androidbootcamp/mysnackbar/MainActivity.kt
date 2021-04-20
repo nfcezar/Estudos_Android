@@ -2,20 +2,17 @@ package com.androidbootcamp.mysnackbar
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.AttributeSet
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.androidbootcamp.mysnackbar.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,64 +20,49 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sharedPreferences = getPreferences()
 
+        binding.btnConfirmPedido.setOnClickListener {
+            btnConfirmOnClick()
+        }
+    }
+
+    private fun getPreferences(): SharedPreferences {
+        //Alocação do shared preferences
+        return getSharedPreferences(
+            getString(R.string.preference_key),
+            Context.MODE_PRIVATE
+        )
+    }
+
+    private fun saveIntOnPreferences(key: String, value: Int) {
+        sharedPreferences.edit()
+            .putInt(key, value)
+            .apply()
+    }
+
+    private fun saveFloatOnPreferences(key: String, value: Float) {
+        sharedPreferences.edit()
+            .putFloat(key, value)
+            .apply()
+    }
+
+    private fun btnConfirmOnClick() {
         with(binding) {
-            btnConfirmPedido.setOnClickListener {
-                Code.getCode(edtCodigo.text.toString().toInt())?.let {
+            Code.getCode(edtCodigo.toInt())?.let {
 
-                    val result = order(it, edtQuantidade.text.toString().toInt())
+                val result = order(it, edtQuantidade.toInt())
 
-                    //Alocação do shared preferences
-                    val sharedPreferences = getSharedPreferences(
-                        getString(R.string.preference_key),
-                        Context.MODE_PRIVATE
+                //Insere o valor do conjunto chave-valor no SharedPrefrences
+                saveIntOnPreferences("key_codigo", edtCodigo.toInt())
+                saveIntOnPreferences("key_quantidade", edtQuantidade.toInt())
+                saveFloatOnPreferences("key_preco", result.price)
 
-                    )
-                    /* val sharedEditor = sharedPreferences.edit()
-                     sharedEditor.putInt("key_test", 99)
-                     sharedEditor.apply()
+                val intent = Intent(this@MainActivity, ConfirmationOrder::class.java)
+                startActivity(intent)
 
-                     with(sharedPreferences.edit()) {
-                         this.putInt("key_test", 99)
-                         this.apply()
-                     }*/
+            } ?: Toast.makeText(application, "Valor Inválido", Toast.LENGTH_LONG).show()
 
-                    //Insere o valor do conjunto chave-valor no SharedPrefrences
-                    with(sharedPreferences.edit()) {
-                        putInt("key_codigo", edtCodigo.text.toString().toInt())
-                        putInt("key_quantidade", edtQuantidade.text.toString().toInt())
-                        putFloat("key_preco", result.price)
-                        apply()
-                    }
-
-                    //Resgate do valor através da chave no arquivo gerado.
-
-                   /* val codigo = sharedPreferences.getInt("key_codigo", 0)
-                    val quantidade = sharedPreferences.getInt("key_quantidade", 0)
-                    val preco = sharedPreferences.getFloat("key_preco", 0F)
-
-                    println("$codigo")
-                    println("$quantidade")
-                    println("$preco")*/
-
-                    val intent = Intent(this@MainActivity, ConfirmationOrder::class.java).apply {
-                       /* putExtra("Code", edtCodigo.text.toString())
-                        putExtra("Qtd", edtQuantidade.text.toString())
-                        putExtra("Price", result.price.toString())*/
-                    }
-
-                    // Toast.makeText(application, "$result", Toast.LENGTH_LONG).show()
-
-                    startActivity(intent)
-
-                } ?: Toast.makeText(application, "Valor Inválido", Toast.LENGTH_LONG).show()
-            }
-
-            /*val code = Code.getCode(edtCode.text.toString().toInt())
-            if (code != null) {
-                val result = order(code, edtQtd.text.toString().toInt())
-
-                Toast.makeText(application, "$result", Toast.LENGTH_LONG).show()*/
         }
     }
 }

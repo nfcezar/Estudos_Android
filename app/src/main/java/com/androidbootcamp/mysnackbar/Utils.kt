@@ -1,5 +1,8 @@
 package com.androidbootcamp.mysnackbar
 
+import android.text.Editable
+import android.widget.EditText
+
 fun order(code: Code, qtd: Int): Result {
 
     val finalPrice = when (code) {
@@ -11,5 +14,10 @@ fun order(code: Code, qtd: Int): Result {
         Code.REFRIGERANTE -> (qtd * Price.PRICE4.price)
     }
     return Result(code, finalPrice, qtd)
+}
+
+
+fun EditText.toInt(): Int {
+   return this.text.toString().toInt()
 }
 
