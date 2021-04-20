@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MySnackBar</string>
+    <string name="preference_key">PreferenceKey</string>
 </resources>

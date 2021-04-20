@@ -23,14 +23,54 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        with(binding) {
 
+        with(binding) {
             btnConfirmPedido.setOnClickListener {
                 Code.getCode(edtCodigo.text.toString().toInt())?.let {
 
                     val result = order(it, edtQuantidade.text.toString().toInt())
-                    val intent = Intent(this@MainActivity, ConfirmationOrder::class.java)
+
+                    //Alocação do shared preferences
+                    val sharedPreferences = getSharedPreferences(
+                        getString(R.string.preference_key),
+                        Context.MODE_PRIVATE
+
+                    )
+                    /* val sharedEditor = sharedPreferences.edit()
+                     sharedEditor.putInt("key_test", 99)
+                     sharedEditor.apply()
+
+                     with(sharedPreferences.edit()) {
+                         this.putInt("key_test", 99)
+                         this.apply()
+                     }*/
+
+                    //Insere o valor do conjunto chave-valor no SharedPrefrences
+                    with(sharedPreferences.edit()) {
+                        putInt("key_codigo", edtCodigo.text.toString().toInt())
+                        putInt("key_quantidade", edtQuantidade.text.toString().toInt())
+                        putFloat("key_preco", result.price)
+                        apply()
+                    }
+
+                    //Resgate do valor através da chave no arquivo gerado.
+
+                   /* val codigo = sharedPreferences.getInt("key_codigo", 0)
+                    val quantidade = sharedPreferences.getInt("key_quantidade", 0)
+                    val preco = sharedPreferences.getFloat("key_preco", 0F)
+
+                    println("$codigo")
+                    println("$quantidade")
+                    println("$preco")*/
+
+                    val intent = Intent(this@MainActivity, ConfirmationOrder::class.java).apply {
+                       /* putExtra("Code", edtCodigo.text.toString())
+                        putExtra("Qtd", edtQuantidade.text.toString())
+                        putExtra("Price", result.price.toString())*/
+                    }
+
                     // Toast.makeText(application, "$result", Toast.LENGTH_LONG).show()
+
                     startActivity(intent)
 
                 } ?: Toast.makeText(application, "Valor Inválido", Toast.LENGTH_LONG).show()
@@ -41,11 +81,7 @@ class MainActivity : AppCompatActivity() {
                 val result = order(code, edtQtd.text.toString().toInt())
 
                 Toast.makeText(application, "$result", Toast.LENGTH_LONG).show()*/
-
         }
-
-
     }
-
 }
 

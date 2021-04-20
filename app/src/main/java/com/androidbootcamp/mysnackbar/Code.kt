@@ -11,9 +11,7 @@ enum class Code(val code: Int) {
 
     companion object {
         fun getCode(code: Int): Code? {
-
             return values().firstOrNull { it.code == code }
-
         }
     }
 
