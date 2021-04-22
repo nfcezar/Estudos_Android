@@ -1,18 +1,16 @@
 package com.androidbootcamp.mysnackbar
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.androidbootcamp.mysnackbar.databinding.ActivityMainBinding
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var sharedPreferencesManager: SharedPreferencesManager
+    private lateinit var doOrderManager: DoOrderManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,50 +18,48 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharedPreferences = getPreferences()
+        initializeManagers()
 
+        setClickListeners()
+    }
+
+    private fun btnConfirmOnClick() =
+        when (doOrderManager.doOrder(binding.edtQuantidade.toInt(), binding.edtCodigo.toInt())) {
+            OrderResult.SUCCESS -> startNavigation()
+            OrderResult.FAILURE -> showErrorMessage()
+
+        }
+
+    private fun startNavigation() {
+        val intent = Intent(this, ConfirmationOrderActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun showErrorMessage() =
+        Toast.makeText(application, ERROR_CODE, Toast.LENGTH_LONG).show()
+
+
+    private fun initializeManagers() {
+        sharedPreferencesManager = SharedPreferencesManager(this)
+        doOrderManager = DoOrderManager(sharedPreferencesManager)
+    }
+
+    private fun setClickListeners() {
         binding.btnConfirmPedido.setOnClickListener {
             btnConfirmOnClick()
         }
     }
 
-    private fun getPreferences(): SharedPreferences {
-        //Alocação do shared preferences
-        return getSharedPreferences(
-            getString(R.string.preference_key),
-            Context.MODE_PRIVATE
-        )
-    }
-
-    private fun saveIntOnPreferences(key: String, value: Int) {
-        sharedPreferences.edit()
-            .putInt(key, value)
-            .apply()
-    }
-
-    private fun saveFloatOnPreferences(key: String, value: Float) {
-        sharedPreferences.edit()
-            .putFloat(key, value)
-            .apply()
-    }
-
-    private fun btnConfirmOnClick() {
-        with(binding) {
-            Code.getCode(edtCodigo.toInt())?.let {
-
-                val result = order(it, edtQuantidade.toInt())
-
-                //Insere o valor do conjunto chave-valor no SharedPrefrences
-                saveIntOnPreferences("key_codigo", edtCodigo.toInt())
-                saveIntOnPreferences("key_quantidade", edtQuantidade.toInt())
-                saveFloatOnPreferences("key_preco", result.price)
-
-                val intent = Intent(this@MainActivity, ConfirmationOrder::class.java)
-                startActivity(intent)
-
-            } ?: Toast.makeText(application, "Valor Inválido", Toast.LENGTH_LONG).show()
-
-        }
+    companion object {
+        private const val ERROR_CODE = "Código Inválido"
     }
 }
+
+
+
+
+
+
+
+
 

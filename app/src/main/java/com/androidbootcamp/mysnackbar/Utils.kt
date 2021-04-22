@@ -1,7 +1,10 @@
 package com.androidbootcamp.mysnackbar
 
-import android.text.Editable
+import android.content.Context
+import android.content.SharedPreferences
 import android.widget.EditText
+import androidx.core.content.ContextCompat.startActivity
+import com.androidbootcamp.mysnackbar.databinding.ActivityMainBinding
 
 fun order(code: Code, qtd: Int): Result {
 
@@ -16,8 +19,17 @@ fun order(code: Code, qtd: Int): Result {
     return Result(code, finalPrice, qtd)
 }
 
-
 fun EditText.toInt(): Int {
-   return this.text.toString().toInt()
+    return this.text.toString().toInt()
 }
+
+
+
+
+
+
+
+
+
+
 

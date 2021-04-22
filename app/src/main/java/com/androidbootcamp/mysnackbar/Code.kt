@@ -14,7 +14,5 @@ enum class Code(val code: Int) {
             return values().firstOrNull { it.code == code }
         }
     }
-
-
 }
 
