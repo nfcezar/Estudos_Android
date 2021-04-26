@@ -3,7 +3,7 @@ package com.androidbootcamp.mysnackbar
 class DoOrderManager(val manager: SharedPreferencesManager) {
 
     fun doOrder(qtd: Int, code: Int): OrderResult {
-        Code.getCode(code)?.let {
+        Meal.getMealFromCode(code)?.let {
             val result = order(it, qtd)
 
             //Insere o valor do conjunto chave-valor no SharedPrefrences

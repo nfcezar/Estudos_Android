@@ -23,10 +23,13 @@ class ConfirmationOrderActivity : AppCompatActivity() {
             val codigo = sharedPreferencesManager.getIntValue("key_codigo")
             val quantidade = sharedPreferencesManager.getIntValue("key_quantidade")
             val preco = sharedPreferencesManager.getFloatValue("key_preco")
+            val snack = Meal.getMealFromCode(codigo)?.snack ?: ""
 
             textviewCodigo.apply { text = codigo.toString() }
             textviewQuantidade.apply { text = quantidade.toString() }
             textviewValor.apply { text = preco.toString() }
+            textviewSnackDesc.apply { text = snack }
+
         }
     }
 }

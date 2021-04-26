@@ -3,12 +3,12 @@ package com.androidbootcamp.mysnackbar
 import android.content.Context
 import android.content.SharedPreferences
 
-class SharedPreferencesManager(val context: Context) {
+class SharedPreferencesManager(private val context: Context) {
 
     private var sharedPreferences: SharedPreferences
 
     init {
-       sharedPreferences = getPreferences()
+        sharedPreferences = getPreferences()
     }
 
     fun getPreferences(): SharedPreferences {
@@ -19,6 +19,7 @@ class SharedPreferencesManager(val context: Context) {
         )
     }
 
+    //Funções genéricas
     fun saveIntOnPreferences(key: String, value: Int) {
         sharedPreferences.edit()
             .putInt(key, value)
@@ -31,11 +32,13 @@ class SharedPreferencesManager(val context: Context) {
             .apply()
     }
 
-    fun getIntValue(key:String): Int {
+    fun getIntValue(key: String): Int {
         return sharedPreferences.getInt(key, 0)
     }
 
-    fun getFloatValue(key:String): Float {
-       return sharedPreferences.getFloat(key, 0F)
+    fun getFloatValue(key: String): Float {
+        return sharedPreferences.getFloat(key, 0F)
     }
+
+
 }

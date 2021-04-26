@@ -1,22 +1,18 @@
 package com.androidbootcamp.mysnackbar
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.widget.EditText
-import androidx.core.content.ContextCompat.startActivity
-import com.androidbootcamp.mysnackbar.databinding.ActivityMainBinding
 
-fun order(code: Code, qtd: Int): Result {
+fun order(meal: Meal, qtd: Int): Result {
 
-    val finalPrice = when (code) {
-        Code.CACHORRO_QUENTE -> (qtd * Price.PRICE1.price)
-        Code.BAURU_SIMPLES -> (qtd * Price.PRICE2.price)
-        Code.BAURU_COM_OVO -> (qtd * Price.PRICE3.price)
-        Code.HAMBURGUER -> (qtd * Price.PRICE1.price)
-        Code.CHEESEBURGUER -> (qtd * Price.PRICE2.price)
-        Code.REFRIGERANTE -> (qtd * Price.PRICE4.price)
+    val finalPrice = when (meal) {
+        Meal.CACHORRO_QUENTE -> (qtd * Price.PRICE1.price)
+        Meal.BAURU_SIMPLES -> (qtd * Price.PRICE2.price)
+        Meal.BAURU_COM_OVO -> (qtd * Price.PRICE3.price)
+        Meal.HAMBURGUER -> (qtd * Price.PRICE1.price)
+        Meal.CHEESEBURGUER -> (qtd * Price.PRICE2.price)
+        Meal.REFRIGERANTE -> (qtd * Price.PRICE4.price)
     }
-    return Result(code, finalPrice, qtd)
+    return Result(meal, finalPrice, qtd)
 }
 
 fun EditText.toInt(): Int {
